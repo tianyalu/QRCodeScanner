@@ -3,6 +3,8 @@ package com.sty.qrcode.scanner.decoding;
 import android.app.Activity;
 import android.content.DialogInterface;
 
+import com.sty.qrcode.scanner.MipcaActivityCapture;
+
 /**
  * Simple listener used to exit the app in a few cases.
  *
@@ -25,7 +27,8 @@ public final class FinishListener
     }
 
     public void run() {
-        activityToFinish.finish();
+        //activityToFinish.finish();
+        ((MipcaActivityCapture) activityToFinish).sendScanErrorBroadcast();
     }
 
 }

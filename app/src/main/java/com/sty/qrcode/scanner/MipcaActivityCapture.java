@@ -55,6 +55,7 @@ public class MipcaActivityCapture extends AppCompatActivity implements Callback,
     private boolean vibrate;
 
     private TextView tvNavTitle;
+    private int timeout;
 
     private BroadcastReceiver mDestroyActivityReceiver = new BroadcastReceiver() {
         @Override
@@ -71,15 +72,20 @@ public class MipcaActivityCapture extends AppCompatActivity implements Callback,
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_capture);
+
+        loadParams();
+        initViews();
+        setListeners();
+        registerDestroyActivityReceiver();
+
         CameraManager.init(getApplication());
 
         hasSurface = false;
-        inactivityTimer = new InactivityTimer(this);
+        inactivityTimer = new InactivityTimer(this, timeout);
+    }
 
-        registerDestroyActivityReceiver();
-
-        initViews();
-        setListeners();
+    protected void loadParams(){
+        timeout = getIntent().getIntExtra(QRCodeScanner.TIMEOUT, 5 * 60);
     }
 
     protected void initViews() {
@@ -285,7 +291,7 @@ public class MipcaActivityCapture extends AppCompatActivity implements Callback,
         sendBroadcast(intent);
     }
 
-    private void sendScanErrorBroadcast(){
+    public void sendScanErrorBroadcast(){
         Intent intent = new Intent(QRCodeScanner.SCAN_INTENT_ACTION);
         intent.putExtra("FLAGS", QRCodeScanner.ERROR_FLAG);
         sendBroadcast(intent);

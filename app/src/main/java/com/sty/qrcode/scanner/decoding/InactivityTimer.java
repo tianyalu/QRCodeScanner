@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class InactivityTimer {
 
-    private static final int INACTIVITY_DELAY_SECONDS = 5 * 60;
+    private int INACTIVITY_DELAY_SECONDS = 5 * 60;
 
     private final ScheduledExecutorService inactivityTimer =
             Executors.newSingleThreadScheduledExecutor(new DaemonThreadFactory());
@@ -22,6 +22,12 @@ public final class InactivityTimer {
 
     public InactivityTimer(Activity activity) {
         this.activity = activity;
+        onActivity();
+    }
+
+    public InactivityTimer(Activity activity, int timeout) {
+        this.activity = activity;
+        this.INACTIVITY_DELAY_SECONDS = timeout;
         onActivity();
     }
 

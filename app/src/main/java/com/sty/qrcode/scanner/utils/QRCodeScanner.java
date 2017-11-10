@@ -13,9 +13,11 @@ import com.sty.qrcode.scanner.MipcaActivityCapture;
 public class QRCodeScanner {
 
     public static final String SCAN_INTENT_ACTION = "android.intent.action.QRCodeScanner";
+    public static final String TIMEOUT = "TIMEOUT";
     private Context context;
     private ScannerListener listener;
     private String qrCodeStr;
+    private int mTimeout = 5 * 60; //默认超时时间为5分钟
 
     private boolean isBroadcastRegistered = false;
     public static final int SUCCESS_FLAG = 0;
@@ -54,6 +56,11 @@ public class QRCodeScanner {
         this.context = context;
     }
 
+    public QRCodeScanner(Context context, int mTimeout){
+        this.context = context;
+        this.mTimeout = mTimeout;
+    }
+
     public interface ScannerListener{
         void onReadSuccess(String result);
 
@@ -65,6 +72,7 @@ public class QRCodeScanner {
     public void open(){
         //Intent intent = new Intent(SCAN_INTENT_ACTION);
         Intent intent = new Intent(context, MipcaActivityCapture.class);
+        intent.putExtra(TIMEOUT, mTimeout);
         context.startActivity(intent);
 
         registerMyBroadcastReceiver();

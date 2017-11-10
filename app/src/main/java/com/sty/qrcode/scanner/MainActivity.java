@@ -2,6 +2,7 @@ package com.sty.qrcode.scanner;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnStartSecondActivity = (Button) findViewById(R.id.btn_start_second_activity);
         btnStartScanner = (Button) findViewById(R.id.btn_start_scanner);
 
-        qrCodeScanner = new QRCodeScanner(this);
+        qrCodeScanner = new QRCodeScanner(this, 30); //30s的扫码超时时间
 
     }
 
@@ -68,16 +69,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 tvQRCode.setText(result);
                 etQRCode.setText(result);
+                Log.i("Tag", "read success...");
             }
 
             @Override
             public void onReadError() {
                 qrCodeScanner.close();
+
+                Log.i("Tag", "read error or time out...");
             }
 
             @Override
             public void onCancel() {
                 qrCodeScanner.close();
+
+                Log.i("Tag", "user canceled...");
             }
         });
     }
